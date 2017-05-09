@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>SalaryList</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link type = "text/css" rel = "stylesheet" href = "webjars/bootstrap/3.3.6/css/bootstrap.min.css" /> 
+</head>
+<body>
+<div class="col-md-4">
+	<h1>Salaries</h1>
+	</div>
+	<div class="col-md-4">
+		<h3 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]</h3>
+	</div>
+	<div class="col-md-4" style="padding:20px 0">
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Sign Out" class="btn btn-danger"/>
+			<a th:text="${#dates.format(datetime, 'dd MMM yyyy')}" class="text-muted"></a>
+		</form>
+	</div>
+		
+    <table class = "table table-striped" >
+    	<thead>
+			<tr>
+			    <th>Name</th>
+			    <th>UserName</th>
+			    <th>Account Number</th>
+			    <th>City</th>
+			    <th>Amount</th>
+			    <th sec:authorize="hasAuthority('ADMIN')"></th>
+		    	<th sec:authorize="hasAuthority('ADMIN')"></th>
+			</tr>
+		</thead>
+				
+		<tr th:each = "asalary:${salaries}">
+			<td th:text = "${asalary.name} + ' ' "></td>
+			<td th:text = "${asalary.username} + ' ' "></td>
+			<td th:text = "${asalary.account} + ' ' "></td>
+			<td th:text = "${asalary.city}"></td>
+			<td th:text = "${asalary.amount}"></td>
+			  
+			<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/edit/{id}(id=${asalary.id})}" class="btn btn-primary">Edit</a></td>
+			<td sec:authorize="hasAuthority('ADMIN')"> <a class = "btn btn-danger" th:href="@{/delete/{id}(id=${asalary.id})}">Delete</a></td>
+		</tr> 		 
+	</table>
+	
+	 <a sec:authorize="hasAuthority('ADMIN')" class = "btn btn-success" href="/add">Add Salary</a>
+	 <a sec:authorize="hasAuthority('ADMIN')" class = "btn btn-primary" th:href="@{/signup}">Sign-up</a>
+	
+</body>
+</html>
